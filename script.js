@@ -59,7 +59,7 @@ const categories = [
     products: [
       {
         img: "./images/desserts/cheesecake.webp",
-        name: "Baked Potatoes",
+        name: "Cheesecake",
         text: "Baked browned fries with bacon, pickled cucumbers, fresh tomatoes and BBQ sauce.",
         price: "3$",
       },

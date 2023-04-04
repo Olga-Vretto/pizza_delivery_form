@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/reset.css" />
+    <link rel="stylesheet" href="./styles/style.css" />
+    <title>Pizza delivery Form</title>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <header>
+        <h1 class="title">Dodo Pizza</h1>
+        <div class="circle"></div>
+        <p class="txt">online delivery</p>
+      </header>
+
+      <h2 class="main-subtitle">Menu</h2>
+      <div class="container flex">
+        <div id="categories" class="categories"></div>
+        <div id="products" class="products"></div>
+        <div id="product-info"></div>
+      </div>
+
+      <div class="form-container main">
+        <h3 class="form-title">Order Registration</h3>
+        <p class="form-txt">
+          Please enter your contact information so that we can send you an
+          order.
+        </p>
+        <form id="form" class="form">
+          <div class="main-input">
+            <label for="name" class="bold">Name:</label>
+            <input
+              type="text"
+              id="name"
+              class="input"
+              name="name"
+              placeholder="Kate Burthon"
+              required
+            />
+          </div>
+          <div class="main-input">
+            <label for="city" class="bold">City:</label>
+            <select name="city" class="input" id="city">
+              <option value="New York">New York"</option>
+              <option value="Buffalo">Buffalo</option>
+              <option value="Rochester">Rochester</option>
+              <option value="Yonkers">Yonkers</option>
+              <option value="Syracuse">Syracuse</option>
+              <option value="Albany">Albany</option>
+              <option value="New Rochelle">New Rochelle</option>
+            </select>
+          </div>
+
+          <div class="main-input">
+            <label for="address" class="bold"> Delivery Address</label>
+            <input
+              type="text"
+              id="address"
+              class="input"
+              name="address"
+              placeholder=" 25 N. Fulton Ave. Brooklyn"
+              required
+            />
+          </div>
+
+          <div class="payment">
+            <h3 class="bold">Payment type:</h3>
+            <label for="cash" class="cash">Cash</label>
+            <input type="radio" name="payment" id="payment" value="Cash" />
+            <label for="card">Card</label>
+            <input type="radio" name="payment" id="payment" value="Card" />
+          </div>
+
+          <div class="quantity main-input">
+            <label class="bold" for="quantity"
+              >Number of products to buy:</label
+            >
+            <input
+              type="number"
+              id="quantity"
+              min="1"
+              required
+              placeholder="1"
+            />
+          </div>
+
+          <div class="main-input">
+            <label for="comments" class="bold"
+              >Enter comments to your order</label
+            >
+            <textarea class="input" name="comments" id="comments"></textarea>
+          </div>
+
+          <button id="btn-send" class="submit" value="Submit">Subnit</button>
+        </form>
+      </div>
+      <div class="container">
+        <table id="table" class="table"></table>
+      </div>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

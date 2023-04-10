@@ -36,7 +36,7 @@ const categories = [
       {
         img: "./images/snacks/dodster.webp",
         name: "Dodster",
-        text: "Discover Dodster - our unique product! Fine mozzarella, chicken breast, fresh tomatoes, seasoned with ranch sauce, wrapped in cuttlefish and baked in the oven.",
+        text: "Mozzarella, chicken breast, fresh tomatoes, ranch sauce, wrapped in cuttlefish.",
         price: "4$",
       },
       {
@@ -48,7 +48,7 @@ const categories = [
       {
         img: "./images/snacks/greek_salad.webp",
         name: "Greek Salad",
-        text: "The taste of the Mediterranean island - with eisberg salad, cherry tomatoes, fresh cucumbers, olives, peppers, Feta cheese and olive oil!",
+        text: "Eisberg salad, cherry tomatoes, cucumbers, olives, peppers, Feta and olive oil.",
         price: "3$",
       },
     ],
@@ -60,7 +60,7 @@ const categories = [
       {
         img: "./images/desserts/cheesecake.webp",
         name: "Cheesecake",
-        text: "Baked browned fries with bacon, pickled cucumbers, fresh tomatoes and BBQ sauce.",
+        text: "Delicate dessert of whipped cream and cheese, with a sweet and velvety taste.",
         price: "3$",
       },
       {
@@ -109,6 +109,17 @@ const productInfoBlock = document.getElementById("product-info");
 const formContainer = document.querySelector(".form-container");
 const form = document.querySelector("#form");
 const sendButton = document.querySelector("#btn-send");
+const ordersBtn = document.querySelector("#orders-btn");
+const myOrders = document.querySelector("#my-orders");
+
+const localStorageService = {
+  getOrders: function () {
+    return localStorage.getItem("orders") || "[]";
+  },
+  setOrders: function (orders) {
+    localStorage.setItem("orders", JSON.stringify(orders));
+  },
+};
 
 function showCategories() {
   categoriesBlock.innerHTML = "";
@@ -121,6 +132,9 @@ function showCategories() {
 
     categoryBtn.addEventListener("click", () => {
       showProducts(category.products);
+      productsBlock.style.backgroundColor = "#ffffff7d";
+      productsBlock.style.border = "2px solid rgba(241, 204, 136, 0.8)";
+      productsBlock.style.padding = "15px";
     });
     categoriesBlock.appendChild(categoryBtn);
   }
@@ -136,6 +150,9 @@ function showProducts(products) {
 
     productBtn.addEventListener("click", () => {
       showProductInfo(product);
+      productInfoBlock.style.backgroundColor = "#ffffff7d";
+      productInfoBlock.style.border = "2px solid rgba(241, 204, 136, 0.8)";
+      productInfoBlock.style.padding = "15px";
     });
     productsBlock.appendChild(productBtn);
   }
@@ -173,6 +190,8 @@ function showProductInfo(product) {
     mainSubTitle.innerHTML = "";
 
     formContainer.style.display = "block";
+
+    window.product = product;
   });
 
   productInfoBlock.appendChild(productImg);
@@ -212,6 +231,21 @@ sendButton.addEventListener("click", (e) => {
   valuesArr.push(comments);
 
   makeTable(valuesArr);
+
+  const orders = JSON.parse(localStorageService.getOrders());
+  const savedOrder = {
+    date: new Date().toLocaleString(),
+    name: name,
+    city: city,
+    address: address,
+    quantity: quantity,
+    payment: payment.value,
+    comments: comments,
+    product: product,
+  };
+
+  orders.push(savedOrder);
+  localStorageService.setOrders(orders);
 });
 
 function makeTable(value) {
@@ -240,4 +274,82 @@ function makeTable(value) {
     td.innerHTML = `${namesArr[i]} ${value[i]}`;
     td.classList.add("td");
   }
+
+  const tableBtn = document.querySelector("#table-btn");
+  tableBtn.style.display = "block";
+  renderCart();
 }
+
+function renderCart() {
+  const orderTitle = document.querySelector(".main-subtitle");
+  orderTitle.innerHTML = "Orders";
+
+  myOrders.innerHTML = "";
+
+  const orders = JSON.parse(localStorageService.getOrders());
+  orders.forEach((order, index) => {
+    const orderBtn = document.createElement("button");
+    orderBtn.textContent = `${index + 1}. ${order.product.name} - Date: ${
+      order.date
+    }`;
+    orderBtn.classList.add("order-button");
+
+    orderBtn.addEventListener("click", () => {
+      renderOrderDescription(order, index);
+    });
+
+    myOrders.appendChild(orderBtn);
+  });
+}
+
+function renderOrderDescription(order, index) {
+  myOrders.innerHTML = "";
+
+  const orderInfo = document.createElement("div");
+  orderInfo.classList.add("order-info");
+  orderInfo.innerHTML = `
+   <div> <img src = "${order.product.img}" class = "order-img"></div>
+   <div> <h4 class = "order-title">${index + 1}. ${order.product.name}</h4>
+   <p class = "order-txt">Quantity: ${order.quantity}</p> 
+   <p class = "order-txt">Description: ${order.product.text}</p>
+   <p class = "order-txt">Price: ${order.product.price}</p>
+   <p class = "order-txt">Name: ${order.name}</p>
+   <p class = "order-txt">City: ${order.city}</p> 
+   <p class = "order-txt">Address: ${order.address}</p> 
+   <p class = "order-txt">Payment: ${order.payment}</p>
+   <p class = "order-txt">Comments: ${order.comments}</p> 
+    <p class = "order-txt">Date: ${order.date}</p></div>
+  `;
+
+  const removeBtn = document.createElement("button");
+  removeBtn.textContent = "Remove";
+  removeBtn.classList.add("remove-btn");
+
+  removeBtn.addEventListener("click", () => {
+    const orders = JSON.parse(localStorageService.getOrders());
+    orders.splice(index, 1);
+    localStorageService.setOrders(orders);
+    renderCart();
+  });
+
+  const backBtn = document.createElement("button");
+  backBtn.textContent = "Back to orders";
+  backBtn.classList.add("back-btn");
+
+  backBtn.addEventListener("click", () => {
+    renderCart();
+  });
+
+  myOrders.appendChild(orderInfo);
+  myOrders.appendChild(removeBtn);
+  myOrders.appendChild(backBtn);
+}
+
+ordersBtn.addEventListener("click", () => {
+  categoriesBlock.style.display = "none";
+  productsBlock.style.display = "none";
+  productInfoBlock.style.display = "none";
+  myOrders.style.display = "block";
+
+  renderCart();
+});
